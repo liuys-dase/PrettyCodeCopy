@@ -8,7 +8,7 @@
     "url": "https://github.com/liuys-dase/PrettyCodeCopy.git"
   },
   "description": "",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "engines": {
     "vscode": "^1.76.0"
   },
@@ -33,7 +33,11 @@
               "workspace",
               "file",
               "path",
-              "time"
+              "time",
+              "repoLink",
+              "gitBranch",
+              "gitShortSha",
+              "gitLastCommitTime"
             ]
           },
           "uniqueItems": true,

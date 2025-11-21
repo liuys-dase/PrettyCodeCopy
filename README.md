@@ -13,6 +13,10 @@ Configurable header fields (setting: `PrettyCodeCopy.headers`):
  - file: file name only
  - path: absolute file path
  - time: ISO timestamp
+ - repoLink: repository permalink to file at current commit (GitHub/GitLab style, with line anchors)
+ - gitBranch: current branch name
+ - gitShortSha: short commit SHA of HEAD
+ - gitLastCommitTime: last commit time (ISO)
 
 ## Behavior
 

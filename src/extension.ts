@@ -1,5 +1,9 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import { exec as execCb } from 'child_process';
+import { promisify } from 'util';
+
+const exec = promisify(execCb);
 
 // Identify the language of the file for the code block
 function detectLanguage(filePath: string): string {
@@ -67,6 +71,93 @@ export function activate(context: vscode.ExtensionContext) {
             const fileName = path.basename(filePath);
             const timestamp = new Date().toISOString();
 
+            // Git helpers – best-effort, empty string if unavailable
+            async function getGitRoot(cwd: string): Promise<string> {
+                try {
+                    const { stdout } = await exec('git rev-parse --show-toplevel', { cwd });
+                    return stdout.trim();
+                } catch {
+                    return '';
+                }
+            }
+
+            async function getGitRemoteUrl(cwd: string): Promise<string> {
+                try {
+                    const { stdout } = await exec('git remote get-url origin', { cwd });
+                    return stdout.trim();
+                } catch {
+                    return '';
+                }
+            }
+
+            async function getGitBranch(cwd: string): Promise<string> {
+                try {
+                    const { stdout } = await exec('git rev-parse --abbrev-ref HEAD', { cwd });
+                    return stdout.trim();
+                } catch {
+                    return '';
+                }
+            }
+
+            async function getGitShortSha(cwd: string): Promise<string> {
+                try {
+                    const { stdout } = await exec('git rev-parse --short HEAD', { cwd });
+                    return stdout.trim();
+                } catch {
+                    return '';
+                }
+            }
+
+            async function getGitLastCommitTime(cwd: string): Promise<string> {
+                try {
+                    const { stdout } = await exec('git log -1 --format=%cI', { cwd });
+                    return stdout.trim();
+                } catch {
+                    return '';
+                }
+            }
+
+            function toHttpsRepoBase(remoteUrl: string): string {
+                // Convert common git remotes to https base URL without .git suffix
+                if (!remoteUrl) return '';
+                let url = remoteUrl.trim();
+                if (url.startsWith('git@')) {
+                    // git@host:user/repo.git
+                    const match = /^git@([^:]+):(.+)$/.exec(url);
+                    if (match) {
+                        url = `https://${match[1]}/${match[2]}`;
+                    }
+                }
+                // Remove .git suffix
+                url = url.replace(/\.git$/, '');
+                if (url.startsWith('http://') || url.startsWith('https://')) {
+                    return url;
+                }
+                return '';
+            }
+
+            function buildRepoFileUrl(base: string, commitSha: string, repoRel: string, start: number, end: number): string {
+                if (!base || !commitSha || !repoRel) return '';
+                // Works for GitHub/GitLab
+                const anchor = start && end ? `#L${start}-L${end}` : '';
+                // Ensure forward slashes for URLs
+                const rel = repoRel.split(path.sep).join('/');
+                return `${base}/blob/${commitSha}/${rel}${anchor}`;
+            }
+
+            // Resolve Git info in parallel
+            const cwd = path.dirname(filePath);
+            const [gitRoot, branch, shortSha, commitTime, remote] = await Promise.all([
+                getGitRoot(cwd),
+                getGitBranch(cwd),
+                getGitShortSha(cwd),
+                getGitLastCommitTime(cwd),
+                getGitRemoteUrl(cwd),
+            ]);
+            const httpsBase = toHttpsRepoBase(remote);
+            const repoRelPath = gitRoot ? path.relative(gitRoot, filePath) : '';
+            const repoUrl = buildRepoFileUrl(httpsBase, shortSha, repoRelPath, startLine, endLine);
+
             const cfg = vscode.workspace.getConfiguration('PrettyCodeCopy');
             const selected = cfg.get<string[]>('headers', ['source', 'lines']);
             const plainText = cfg.get<boolean>('plainText', false);
@@ -90,6 +181,10 @@ export function activate(context: vscode.ExtensionContext) {
                 { id: "file", render: () => fmt('File', fileName) },
                 { id: "path", render: () => fmt('Path', filePath) },
                 { id: "time", render: () => fmt('Time', timestamp) },
+                { id: "repoLink", render: () => fmt('Repo', repoUrl) },
+                { id: "gitBranch", render: () => fmt('Branch', branch) },
+                { id: "gitShortSha", render: () => fmt('SHA', shortSha) },
+                { id: "gitLastCommitTime", render: () => fmt('Last Commit', commitTime) },
             ];
             const selectedIds = new Set(selected);
 
