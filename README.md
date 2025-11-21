@@ -1,9 +1,14 @@
 # Pretty Code Copy
 
-A lightweight VS Code extension to copy code “with context” in one keystroke.
+A lightweight VS Code extension to copy code “with context” in one keystroke, designed for secnarios like code sharing, issue reporting, vibe coding, etc.
 
 When you copy from the editor using this extension, you can choose which header fields to include via a multi-select picker, then the selected header lines are added above the fenced code block.
 
+## Demo
+
+![Demo](demo.gif)
+
+## Features
 Configurable header fields (setting: `PrettyCodeCopy.headers`):
 
  - source: file path relative to workspace
@@ -52,47 +57,3 @@ Configurable header fields (setting: `PrettyCodeCopy.headers`):
 - When enabled, the extension outputs plain text without Markdown formatting:
   - Headers are rendered as `Key: Value` (no bold/backticks)
   - Code is appended as-is (no fenced code block)
-
-## Package and Install
-
-This project uses `vsce` to produce a `.vsix` package.
-
-1) Install dependencies and build
-
-```bash
-npm install
-npm run compile
-```
-
-2) Package to VSIX
-
-Option A (recommended, no global install):
-
-```bash
-npx @vscode/vsce package
-```
-
-Option B (global install once):
-
-```bash
-npm i -g @vscode/vsce
-vsce package
-```
-
-After success, you should see a file like `copy-code-with-context-0.0.1.vsix` at the project root.
-
-3) Install the VSIX in VS Code
-
-- Open VS Code → Extensions view.
-- Click the “...” menu → `Install from VSIX...`.
-- Select the generated `.vsix` to install.
-
-## Develop and Debug
-
-- Run extension host: press `F5` to launch an Extension Development Host.
-- Build: `npm run compile` (or `npm run watch` for incremental builds).
-
-## Notes
-
-- The extension activates on first command execution (`activationEvents: onCommand`).
-- If the keybinding conflicts with other extensions or the OS, rebind `PrettyCodeCopy.copy` in Keyboard Shortcuts.

@@ -196,7 +196,8 @@ export function activate(context: vscode.ExtensionContext) {
                 }
             }
 
-            const headerBlock = headerLines.length > 0 ? headerLines.join("\n") + "\n\n" : "";
+            // Put a blank line between header lines for Markdown formatting
+            const headerBlock = headerLines.length > 0 ? headerLines.join("\n\n") + "\n\n" : "";
             const body = plainText ? `${selectedText}` : `\`\`\`${lang}\n${selectedText}\n\`\`\`\n`;
             const output = headerBlock + body;
 
