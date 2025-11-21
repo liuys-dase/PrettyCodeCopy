@@ -73,9 +73,12 @@ export function activate(context: vscode.ExtensionContext) {
 
             // Format the header line according to the plainText setting.
             const fmt = (label: string, value: string) => {
-                if (plainText) return `${label}: ${value}`;
+                const v = (value ?? "").toString();
+                // Hide the line if value is empty/whitespace
+                if (v.trim().length === 0) return "";
+                if (plainText) return `${label}: ${v}`;
                 // markdown
-                const mdValue = (label === 'Source' || label === 'Path') ? `\`${value}\`` : value;
+                const mdValue = (label === 'Source' || label === 'Path') ? `\`${v}\`` : v;
                 return `**${label}:** ${mdValue}`;
             };
 
