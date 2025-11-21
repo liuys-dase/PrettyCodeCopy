@@ -2,12 +2,13 @@
   "name": "PrettyCodeCopy",
   "displayName": "PrettyCodeCopy",
   "publisher": "liuyushi",
+  "icon": "icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/liuys-dase/PrettyCodeCopy.git"
   },
   "description": "",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "engines": {
     "vscode": "^1.76.0"
   },
