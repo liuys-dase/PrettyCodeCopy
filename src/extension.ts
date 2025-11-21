@@ -55,17 +55,43 @@ export function activate(context: vscode.ExtensionContext) {
                 relativePath = path.relative(workspaceFolder, filePath);
             }
 
-            const lang = detectLanguage(relativePath);
+            const lang = detectLanguage(relativePath) || document.languageId || "";
 
-            // for the best output format for Vibe Coding
-            const output =
-`**Source:** \`${relativePath}\`
-**Lines:** ${startLine}-${endLine}
+            // Build header lines from persisted settings
+            type HeaderOpt = {
+                id: string;
+                render: () => string;
+            };
 
-\`\`\`${lang}
-${selectedText}
-\`\`\`
-`;
+            const workspaceName = vscode.workspace.workspaceFolders?.[0]?.name ?? "";
+            const fileName = path.basename(filePath);
+            const timestamp = new Date().toISOString();
+
+            const available: HeaderOpt[] = [
+                { id: "source", render: () => `**Source:** \`${relativePath}\`` },
+                { id: "lines", render: () => `**Lines:** ${startLine}-${endLine}` },
+                { id: "language", render: () => `**Language:** ${lang}` },
+                { id: "workspace", render: () => `**Workspace:** ${workspaceName}` },
+                { id: "file", render: () => `**File:** ${fileName}` },
+                { id: "path", render: () => `**Path:** \`${filePath}\`` },
+                { id: "time", render: () => `**Time:** ${timestamp}` },
+            ];
+
+            const cfg = vscode.workspace.getConfiguration('copyCodeWithContext');
+            const selected = cfg.get<string[]>('headers', ['source', 'lines']);
+            const selectedIds = new Set(selected);
+
+            const headerLines: string[] = [];
+            for (const opt of available) {
+                if (selectedIds.has(opt.id)) {
+                    const line = opt.render();
+                    if (line) headerLines.push(line);
+                }
+            }
+
+            const headerBlock = headerLines.length > 0 ? headerLines.join("\n") + "\n\n" : "";
+            const fenced = `\`\`\`${lang}\n${selectedText}\n\`\`\`\n`;
+            const output = headerBlock + fenced;
 
             await vscode.env.clipboard.writeText(output);
             vscode.window.showInformationMessage("Copied code with context!");

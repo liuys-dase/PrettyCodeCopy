@@ -2,19 +2,17 @@
 
 A lightweight VS Code extension to copy code “with context” in one keystroke.
 
-When you copy from the editor using this extension, it writes to the clipboard:
+When you copy from the editor using this extension, you can choose which header fields to include via a multi-select picker, then the selected header lines are added above the fenced code block.
 
-- The file path relative to your current workspace
-- The line range (selection start–end; whole file when no selection)
-- The actual code text
+Configurable header fields (setting: `copyCodeWithContext.headers`):
 
-Copied result example:
-
-```
-source file: src/extension.ts
-lines: 12-35
-<copied code content>
-```
+ - source: file path relative to workspace
+ - lines: selected (or whole-file) line range
+ - language: language identifier used for the fence
+ - workspace: current workspace name
+ - file: file name only
+ - path: absolute file path
+ - time: ISO timestamp
 
 ## Behavior
 
@@ -29,10 +27,20 @@ lines: 12-35
 
 1. Open any code file and ensure the editor has focus (`editorTextFocus`).
 2. Optional: select the code to copy; otherwise the whole file is used.
-3. Trigger one of the following:
+3. Configure once (optional): set `copyCodeWithContext.headers` in Settings to choose which header fields are included (default: [source, lines]).
+4. Trigger one of the following:
    - Press the keybinding (macOS: `Cmd+Alt+C`).
    - Open Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`) and run `Copy Code With File Path and Line Numbers`.
-4. You will see “Copied code with context!” and the content is in your clipboard.
+5. You will see “Copied code with context!” and the content is in your clipboard.
+
+### Settings examples
+
+- UI: search for “Pretty Code Copy” → “Headers”.
+- JSON:
+
+```
+"copyCodeWithContext.headers": ["source", "lines", "language"]
+```
 
 ## Package and Install
 

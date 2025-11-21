@@ -17,6 +17,29 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
+  "configuration": {
+      "title": "Pretty Code Copy",
+      "properties": {
+        "copyCodeWithContext.headers": {
+          "type": "array",
+          "description": "Header fields to include above the copied code block.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "source",
+              "lines",
+              "language",
+              "workspace",
+              "file",
+              "path",
+              "time"
+            ]
+          },
+          "uniqueItems": true,
+          "default": ["source", "lines"]
+        }
+      }
+    },
   "commands": [
       {
         "command": "copyCodeWithContext.copy",
