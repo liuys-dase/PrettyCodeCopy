@@ -8,7 +8,7 @@
     "url": "https://github.com/liuys-dase/PrettyCodeCopy.git"
   },
   "description": "",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "engines": {
     "vscode": "^1.76.0"
   },
@@ -21,7 +21,7 @@
   "configuration": {
       "title": "Pretty Code Copy",
       "properties": {
-        "copyCodeWithContext.headers": {
+        "PrettyCodeCopy.headers": {
           "type": "array",
           "description": "Header fields to include above the copied code block.",
           "items": {
@@ -39,7 +39,7 @@
           "uniqueItems": true,
           "default": ["source", "lines"]
         },
-        "copyCodeWithContext.plainText": {
+        "PrettyCodeCopy.plainText": {
           "type": "boolean",
           "description": "Output plain text without Markdown formatting or fenced code block.",
           "default": false
@@ -48,13 +48,13 @@
     },
   "commands": [
       {
-        "command": "copyCodeWithContext.copy",
+        "command": "PrettyCodeCopy.copy",
         "title": "Copy Code With File Path and Line Numbers"
       }
     ],
     "keybindings": [
       {
-        "command": "copyCodeWithContext.copy",
+        "command": "PrettyCodeCopy.copy",
         "key": "cmd+alt+c",
         "when": "editorTextFocus"
       }

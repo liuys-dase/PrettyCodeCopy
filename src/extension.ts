@@ -22,7 +22,7 @@ function detectLanguage(filePath: string): string {
 
 export function activate(context: vscode.ExtensionContext) {
     let disposable = vscode.commands.registerCommand(
-        'copyCodeWithContext.copy',
+        'PrettyCodeCopy.copy',
         async () => {
             const editor = vscode.window.activeTextEditor;
             if (!editor) {
@@ -67,7 +67,7 @@ export function activate(context: vscode.ExtensionContext) {
             const fileName = path.basename(filePath);
             const timestamp = new Date().toISOString();
 
-            const cfg = vscode.workspace.getConfiguration('copyCodeWithContext');
+            const cfg = vscode.workspace.getConfiguration('PrettyCodeCopy');
             const selected = cfg.get<string[]>('headers', ['source', 'lines']);
             const plainText = cfg.get<boolean>('plainText', false);
 
