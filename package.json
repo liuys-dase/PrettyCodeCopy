@@ -2,6 +2,10 @@
   "name": "pretty-code-copy",
   "displayName": "pretty-code-copy",
   "publisher": "liuyushi",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/liuys-dase/PrettyCodeCopy.git"
+  },
   "description": "",
   "version": "0.0.1",
   "engines": {
