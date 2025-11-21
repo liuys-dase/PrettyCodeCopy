@@ -6,5 +6,6 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+- Add plain text output mode (`copyCodeWithContext.plainText`)
 - Add settings-based header selection (`copyCodeWithContext.headers`)
 - Initial release

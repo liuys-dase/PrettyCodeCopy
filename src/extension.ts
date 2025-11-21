@@ -67,18 +67,27 @@ export function activate(context: vscode.ExtensionContext) {
             const fileName = path.basename(filePath);
             const timestamp = new Date().toISOString();
 
-            const available: HeaderOpt[] = [
-                { id: "source", render: () => `**Source:** \`${relativePath}\`` },
-                { id: "lines", render: () => `**Lines:** ${startLine}-${endLine}` },
-                { id: "language", render: () => `**Language:** ${lang}` },
-                { id: "workspace", render: () => `**Workspace:** ${workspaceName}` },
-                { id: "file", render: () => `**File:** ${fileName}` },
-                { id: "path", render: () => `**Path:** \`${filePath}\`` },
-                { id: "time", render: () => `**Time:** ${timestamp}` },
-            ];
-
             const cfg = vscode.workspace.getConfiguration('copyCodeWithContext');
             const selected = cfg.get<string[]>('headers', ['source', 'lines']);
+            const plainText = cfg.get<boolean>('plainText', false);
+
+            // Format the header line according to the plainText setting.
+            const fmt = (label: string, value: string) => {
+                if (plainText) return `${label}: ${value}`;
+                // markdown
+                const mdValue = (label === 'Source' || label === 'Path') ? `\`${value}\`` : value;
+                return `**${label}:** ${mdValue}`;
+            };
+
+            const available: HeaderOpt[] = [
+                { id: "source", render: () => fmt('Source', relativePath) },
+                { id: "lines", render: () => fmt('Lines', `${startLine}-${endLine}`) },
+                { id: "language", render: () => fmt('Language', lang) },
+                { id: "workspace", render: () => fmt('Workspace', workspaceName) },
+                { id: "file", render: () => fmt('File', fileName) },
+                { id: "path", render: () => fmt('Path', filePath) },
+                { id: "time", render: () => fmt('Time', timestamp) },
+            ];
             const selectedIds = new Set(selected);
 
             const headerLines: string[] = [];
@@ -90,8 +99,8 @@ export function activate(context: vscode.ExtensionContext) {
             }
 
             const headerBlock = headerLines.length > 0 ? headerLines.join("\n") + "\n\n" : "";
-            const fenced = `\`\`\`${lang}\n${selectedText}\n\`\`\`\n`;
-            const output = headerBlock + fenced;
+            const body = plainText ? `${selectedText}` : `\`\`\`${lang}\n${selectedText}\n\`\`\`\n`;
+            const output = headerBlock + body;
 
             await vscode.env.clipboard.writeText(output);
             vscode.window.showInformationMessage("Copied code with context!");

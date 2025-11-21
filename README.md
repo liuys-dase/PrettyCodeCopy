@@ -42,6 +42,13 @@ Configurable header fields (setting: `copyCodeWithContext.headers`):
 "copyCodeWithContext.headers": ["source", "lines", "language"]
 ```
 
+### Plain text mode
+
+- Setting: `copyCodeWithContext.plainText` (boolean, default: false)
+- When enabled, the extension outputs plain text without Markdown formatting:
+  - Headers are rendered as `Key: Value` (no bold/backticks)
+  - Code is appended as-is (no fenced code block)
+
 ## Package and Install
 
 This project uses `vsce` to produce a `.vsix` package.
