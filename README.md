@@ -1,6 +1,6 @@
 # Pretty Code Copy
 
-A lightweight VS Code extension to copy code “with context” in one keystroke, designed for secnarios like code sharing, issue reporting, vibe coding, etc.
+A lightweight VS Code extension to copy code “with context” in one keystroke, designed for secnarios like **code sharing**, **issue reporting**, **vibe coding**, etc.
 
 When you copy from the editor using this extension, you can choose which header fields to include via a multi-select picker, then the selected header lines are added above the fenced code block.
 
@@ -30,6 +30,7 @@ Configurable header fields (setting: `PrettyCodeCopy.headers`):
 - Command: `Copy Code With File Path and Line Numbers` (ID: `PrettyCodeCopy.copy`).
 - Default keybinding:
   - macOS: `Cmd+Alt+C`
+  - windows: `Ctrl+Shift+Alt+C`
   - Other platforms: not bound by default; bind `PrettyCodeCopy.copy` yourself in Keyboard Shortcuts.
 
 ## Usage
@@ -57,3 +58,8 @@ Configurable header fields (setting: `PrettyCodeCopy.headers`):
 - When enabled, the extension outputs plain text without Markdown formatting:
   - Headers are rendered as `Key: Value` (no bold/backticks)
   - Code is appended as-is (no fenced code block)
+
+## Source Code
+https://github.com/liuys-dase/PrettyCodeCopy
+
+**Enjoy!**

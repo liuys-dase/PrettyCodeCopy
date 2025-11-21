@@ -8,7 +8,7 @@
     "url": "https://github.com/liuys-dase/PrettyCodeCopy.git"
   },
   "description": "",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "engines": {
     "vscode": "^1.76.0"
   },
@@ -60,6 +60,7 @@
       {
         "command": "PrettyCodeCopy.copy",
         "key": "cmd+alt+c",
+        "win": "ctrl+shift+alt+c",
         "when": "editorTextFocus"
       }
     ]
