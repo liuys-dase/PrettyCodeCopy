@@ -9,7 +9,7 @@ When you copy from the editor using this extension, you can choose which header 
 ![Demo](demo.gif)
 
 ## Features
-Configurable header fields (setting: `PrettyCodeCopy.headers`):
+Configurable header fields (setting: `PrettyCodeCopy.filePathHeaders`):
 
  - source: file path relative to workspace
  - lines: selected (or whole-file) line range
@@ -37,7 +37,7 @@ Configurable header fields (setting: `PrettyCodeCopy.headers`):
 
 1. Open any code file and ensure the editor has focus (`editorTextFocus`).
 2. Optional: select the code to copy; otherwise the whole file is used.
-3. Configure once (optional): set `PrettyCodeCopy.headers` in Settings to choose which header fields are included (default: [source, lines]).
+3. Configure once (optional): set `PrettyCodeCopy.headers-filepath` in Settings to choose which header fields are included (default: [source, lines]).
 4. Trigger one of the following:
    - Press the keybinding (macOS: `Cmd+Alt+C`).
    - Open Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`) and run `Copy Code With File Path and Line Numbers`.
@@ -49,7 +49,7 @@ Configurable header fields (setting: `PrettyCodeCopy.headers`):
 - JSON:
 
 ```
-"PrettyCodeCopy.headers": ["source", "lines", "language"]
+"PrettyCodeCopy.headers-filepath": ["source", "lines", "language"]
 ```
 
 ### Plain text mode

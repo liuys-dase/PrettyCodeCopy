@@ -4,8 +4,4 @@ All notable changes to the "PrettyCodeCopy" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## [Unreleased]
 
- - Add plain text output mode (`PrettyCodeCopy.plainText`)
- - Add settings-based header selection (`PrettyCodeCopy.headers`)
-- Initial release

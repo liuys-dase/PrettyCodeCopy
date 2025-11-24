@@ -18,12 +18,12 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
-  "configuration": {
+    "configuration": {
       "title": "Pretty Code Copy",
       "properties": {
-        "PrettyCodeCopy.headers": {
+        "PrettyCodeCopy.filePathHeaders": {
           "type": "array",
-          "description": "Header fields to include above the copied code block.",
+          "description": "Header fields related to file path/info to include above the copied code block.",
           "items": {
             "type": "string",
             "enum": [
@@ -38,19 +38,44 @@
               "gitBranch",
               "gitShortSha",
               "gitLastCommitTime"
+            ],
+            "markdownEnumDescriptions": [
+              "Path of the file relative to the workspace root (e.g., `src/main.ts`).",
+              "Selected line range as `start-end` (e.g., `5-18`).",
+              "Detected language identifier used for fenced code blocks (e.g., `typescript`).",
+              "Current VS Code workspace name.",
+              "File name only (e.g., `main.ts`).",
+              "Absolute filesystem path to the file.",
+              "ISO 8601 timestamp when the copy was made.",
+              "Repository permalink to this file at the current commit with line anchors when available.",
+              "Current Git branch name.",
+              "Short SHA of `HEAD` (e.g., `a1b2c3d`).",
+              "Commit time of `HEAD` in ISO 8601 format."
             ]
           },
           "uniqueItems": true,
-          "default": ["source", "lines"]
+          "default": [
+            "source",
+            "lines"
+          ]
         },
         "PrettyCodeCopy.plainText": {
           "type": "boolean",
           "description": "Output plain text without Markdown formatting or fenced code block.",
           "default": false
+        },
+        "PrettyCodeCopy.codeStructureHeaders": {
+          "type": "array",
+          "description": "Header fields related to code structure (e.g., symbols, signatures).",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true,
+          "default": []
         }
       }
     },
-  "commands": [
+    "commands": [
       {
         "command": "PrettyCodeCopy.copy",
         "title": "Copy Code With File Path and Line Numbers"
@@ -74,13 +99,16 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.76.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
-    "typescript-eslint": "^8.46.3",
+    "@types/vscode": "^1.76.0",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2",
     "eslint": "^9.39.1",
     "typescript": "^5.9.3",
-    "@vscode/test-cli": "^0.0.12",
-    "@vscode/test-electron": "^2.5.2"
+    "typescript-eslint": "^8.46.3"
+  },
+  "dependencies": {
+    "vsce": "^2.15.0"
   }
 }

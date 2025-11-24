@@ -159,7 +159,8 @@ export function activate(context: vscode.ExtensionContext) {
             const repoUrl = buildRepoFileUrl(httpsBase, shortSha, repoRelPath, startLine, endLine);
 
             const cfg = vscode.workspace.getConfiguration('PrettyCodeCopy');
-            const selected = cfg.get<string[]>('headers', ['source', 'lines']);
+            // Read new key; fall back to legacy key for backward compatibility
+            const selected = cfg.get<string[]>('filePathHeaders', cfg.get<string[]>('headers', ['source', 'lines']));
             const plainText = cfg.get<boolean>('plainText', false);
 
             // Format the header line according to the plainText setting.
