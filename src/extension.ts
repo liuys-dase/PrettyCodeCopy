@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import { exec as execCb } from 'child_process';
 import { promisify } from 'util';
+import { getContextInfo, ContextInfo } from './lang';
 
 // 将 Node.js 回调风格的 exec 转为 Promise 形式，便于使用 async/await
 const exec = promisify(execCb);
@@ -43,16 +44,24 @@ export function activate(context: vscode.ExtensionContext) {
         // 4) 读取设置
         const settings = getSettings();
 
-        // 5) 渲染 Header
+        // 5) 代码结构上下文（语言适配器）
+        const position = editor.selection?.start ?? new vscode.Position(ctx.startLine - 1, 0);
+        const codeCtx: ContextInfo = await getContextInfo(
+            ctx.document,
+            position,
+            { startLine: ctx.startLine - 1, endLine: ctx.endLine - 1 },
+        );
+
+        // 6) 渲染 Header
         const fmt = makeFormatter(settings.plainText);
         const filePathProviders = getFilePathHeaderProviders(ctx, git, fmt);
-        const codeStructureProviders = getCodeStructureHeaderProviders(ctx, git, fmt);
+        const codeStructureProviders = getCodeStructureHeaderProviders(codeCtx, fmt);
         const headerLines = [
             ...renderSelected(settings.filePathHeaderIds, filePathProviders),
             ...renderSelected(settings.codeStructureHeaderIds, codeStructureProviders),
         ];
 
-        // 6) 组装输出并复制
+        // 7) 组装输出并复制
         const output = buildOutput(headerLines, settings.plainText, ctx.lang, ctx.selectedText);
         await vscode.env.clipboard.writeText(output);
         vscode.window.showInformationMessage("Copied code with context!");
@@ -225,9 +234,13 @@ function getFilePathHeaderProviders(ctx: EditorContext, git: GitInfo, fmt: (l: s
     ];
 }
 
-// 代码结构相关 Header 提供者（预留）
-function getCodeStructureHeaderProviders(_ctx: EditorContext, _git: GitInfo, _fmt: (l: string, v: string) => string): HeaderOpt[] {
-    return [];
+// 代码结构相关 Header 提供者：基于语言适配器的 ContextInfo
+function getCodeStructureHeaderProviders(codeCtx: ContextInfo, fmt: (l: string, v: string) => string): HeaderOpt[] {
+    return [
+        { id: 'function', render: () => codeCtx.functionName ? fmt('Function', codeCtx.functionName) : '' },
+        { id: 'class', render: () => codeCtx.className ? fmt('Class', codeCtx.className) : '' },
+        { id: 'module', render: () => codeCtx.moduleName ? fmt('Module', codeCtx.moduleName) : '' },
+    ];
 }
 
 // 按配置 id 顺序渲染 Header 行
